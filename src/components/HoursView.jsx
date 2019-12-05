@@ -28,10 +28,15 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2),
     textAlign: 'center',
     color: theme.palette.text.secondary
+  },
+  loader: {
+    paddingTop: '40px',
+    display: 'flex',
+    justifyContent: 'center'
   }
 }));
 
-const HoursView = props => {
+const HoursView = () => {
   const { data, loading } = useQuery(getHoursQuery);
   const classes = useStyles();
 
@@ -54,11 +59,11 @@ const HoursView = props => {
     <div className={classes.root}>
       <Grid container spacing={3}>
         {!loading ? (
-          Object.keys(days).map((day, index) => (
-            <HoursViewSection key={index} headerText={day} hours={days[day]} />
+          Object.keys(days).map(day => (
+            <HoursViewSection key={day} headerText={day} hours={days[day]} />
           ))
         ) : (
-          <Grid item xs={12}>
+          <Grid item xs={12} className={classes.loader}>
             <CircularProgress />
           </Grid>
         )}
