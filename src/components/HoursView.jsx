@@ -8,7 +8,7 @@ import HoursViewSection from './HoursViewSection';
 
 const getHoursQuery = gql`
   {
-    hours {
+    hours(sortByDay: true) {
       id
       day
       dayString
