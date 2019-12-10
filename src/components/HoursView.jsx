@@ -69,6 +69,7 @@ const HoursView = () => {
           />
         ))}
       </Grid>
+
       <AddButton />
     </div>
   );

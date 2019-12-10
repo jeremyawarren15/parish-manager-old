@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
+import CreateHourDialog from './CreateHourDialog';
 
 const style = {
   margin: 0,
@@ -11,10 +12,26 @@ const style = {
   position: 'fixed'
 };
 
-const AddButton = () => (
-  <Fab style={style} color="secondary">
-    <AddIcon />
-  </Fab>
-);
+const AddButton = () => {
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <>
+      <Fab onClick={handleClickOpen} style={style} color="secondary">
+        <AddIcon />
+      </Fab>
+
+      <CreateHourDialog open={open} handleClose={handleClose} />
+    </>
+  );
+};
 
 export default AddButton;
