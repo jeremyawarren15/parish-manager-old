@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import AddButton from './AddButton';
 import HoursViewSection from './HoursViewSection';
 
-const getHoursQuery = gql`
+const HOURS_QUERY = gql`
   {
     hours(sortByDay: true) {
       id
@@ -19,6 +19,19 @@ const getHoursQuery = gql`
     }
   }
 `;
+
+const sortHoursByDay = hours => {
+  return hours.reduce((result, hour) => {
+    const { dayString } = hour;
+
+    // eslint-disable-next-line no-param-reassign
+    result[dayString] = result[dayString]
+      ? [...result[dayString], hour]
+      : [hour];
+
+    return result;
+  }, {});
+};
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -37,36 +50,24 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const HoursView = () => {
-  const { data, loading } = useQuery(getHoursQuery);
   const classes = useStyles();
+  const { loading, error, data } = useQuery(HOURS_QUERY);
 
-  const getHoursByDay = hours => {
-    return hours.reduce((tempHours, hour) => {
-      const { dayString } = hour;
+  if (loading) return <CircularProgress />;
+  if (error) return <p>Error loading hours...</p>;
 
-      // eslint-disable-next-line no-param-reassign
-      tempHours[dayString] = tempHours[dayString]
-        ? [...tempHours[dayString], hour]
-        : [hour];
-
-      return tempHours;
-    }, {});
-  };
-
-  const days = !loading && getHoursByDay(data.hours);
+  const sections = sortHoursByDay(data.hours);
 
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
-        {!loading ? (
-          Object.keys(days).map(day => (
-            <HoursViewSection key={day} headerText={day} hours={days[day]} />
-          ))
-        ) : (
-          <Grid item xs={12} className={classes.loader}>
-            <CircularProgress />
-          </Grid>
-        )}
+        {Object.keys(sections).map(section => (
+          <HoursViewSection
+            key={section}
+            headerText={section}
+            hours={sections[section]}
+          />
+        ))}
       </Grid>
       <AddButton />
     </div>

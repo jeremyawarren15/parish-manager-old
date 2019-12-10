@@ -20,20 +20,18 @@ const HoursViewSection = props => {
           {headerText}
         </Typography>
       </Grid>
-      {hours.map((hour, index) => {
-        return (
-          <Grid key={index} item xs={12} sm={6} md={3}>
-            <HourCard
-              day={hour.dayString}
-              time={hour.timeString}
-              place={hour.location}
-              committedAdorers={hour.committedAdorers}
-              requiredNumberOfAdorers={hour.requiredNumberOfAdorers}
-              displayIndex={index}
-            />
-          </Grid>
-        );
-      })}
+      {hours.map((hour, index) => (
+        <Grid key={index} item xs={12} sm={6} md={3}>
+          <HourCard
+            day={hour.dayString}
+            time={hour.timeString}
+            place={hour.location}
+            committedAdorers={hour.committedAdorers}
+            requiredNumberOfAdorers={hour.requiredNumberOfAdorers}
+            displayIndex={index}
+          />
+        </Grid>
+      ))}
     </>
   );
 };
