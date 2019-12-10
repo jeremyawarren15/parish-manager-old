@@ -21,7 +21,7 @@ const HoursViewSection = props => {
         </Typography>
       </Grid>
       {hours.map((hour, index) => (
-        <Grid key={index} item xs={12} sm={6} md={3}>
+        <Grid key={hour.id} item xs={12} sm={6} md={3}>
           <HourCard
             day={hour.dayString}
             time={hour.timeString}
