@@ -15,21 +15,13 @@ const style = {
 const AddButton = () => {
   const [open, setOpen] = useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
     <>
-      <Fab onClick={handleClickOpen} style={style} color="secondary">
+      <Fab onClick={() => setOpen(true)} style={style} color="secondary">
         <AddIcon />
       </Fab>
 
-      <CreateHourDialog open={open} handleClose={handleClose} />
+      <CreateHourDialog open={open} handleClose={() => setOpen(false)} />
     </>
   );
 };
