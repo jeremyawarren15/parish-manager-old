@@ -3,11 +3,14 @@ import 'typeface-roboto';
 import Container from '@material-ui/core/Container';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import NavigationMenu from './components/NavigationMenu';
 import Header from './components/Header';
 import NavigationMenuContext from './contexts/NavigationMenuContext';
 import UserContext from './contexts/UserContext';
 import HoursView from './components/HoursView';
+import Home from './components/Home';
+import Volunteers from './components/Volunteers';
 
 const client = new ApolloClient({
   uri:
@@ -22,18 +25,24 @@ const App = () => {
 
   return (
     <ApolloProvider client={client}>
-      <NavigationMenuContext.Provider
-        value={{ navigationMenuOpen, setNavigationMenuOpen }}
-      >
-        <UserContext.Provider value={{ user, setUser }}>
-          <Header />
-        </UserContext.Provider>
-        <NavigationMenu />
-      </NavigationMenuContext.Provider>
+      <Router>
+        <NavigationMenuContext.Provider
+          value={{ navigationMenuOpen, setNavigationMenuOpen }}
+        >
+          <UserContext.Provider value={{ user, setUser }}>
+            <Header />
+          </UserContext.Provider>
+          <NavigationMenu />
+        </NavigationMenuContext.Provider>
 
-      <Container maxWidth="md">
-        <HoursView />
-      </Container>
+        <Container maxWidth="md" style={{ paddingTop: '76px' }}>
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route path="/hours" component={HoursView} />
+            <Route path="/volunteers" component={Volunteers} />
+          </Switch>
+        </Container>
+      </Router>
     </ApolloProvider>
   );
 };

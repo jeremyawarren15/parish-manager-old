@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
+import {
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
+} from '@material-ui/core';
+
+import { daysOfTheWeek } from '../helpers/HourHelper';
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -28,7 +32,6 @@ const CreateHourDialog = ({ open, handleClose }) => {
   const [day, setDay] = useState(0);
   const [time, setTime] = useState(0);
   const [requiredAdorers, setRequiredAdorers] = useState(0);
-  const [labelWidth, setLabelWidth] = useState(0);
 
   return (
     <Dialog
@@ -51,15 +54,14 @@ const CreateHourDialog = ({ open, handleClose }) => {
             labelId="demo-simple-select-outlined-label"
             id="demo-simple-select-outlined"
             value={day}
+            required
             onChange={e => setDay(e.target.value)}
           >
-            <MenuItem value={0}>Sunday</MenuItem>
-            <MenuItem value={1}>Monday</MenuItem>
-            <MenuItem value={2}>Tuesday</MenuItem>
-            <MenuItem value={3}>Wednesday</MenuItem>
-            <MenuItem value={4}>Thursday</MenuItem>
-            <MenuItem value={5}>Friday</MenuItem>
-            <MenuItem value={6}>Saturday</MenuItem>
+            {Object.keys(daysOfTheWeek).map((dayOfTheWeek, value) => (
+              <MenuItem key={dayOfTheWeek} value={value}>
+                {daysOfTheWeek[dayOfTheWeek]}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
 
@@ -82,29 +84,36 @@ const CreateHourDialog = ({ open, handleClose }) => {
             <MenuItem value={6}>6-7AM</MenuItem>
           </Select>
         </FormControl>
-        <TextField
-          id="required adorers"
-          label="Required Adorers"
-          type="number"
-          variant="filled"
-          value={requiredAdorers}
-          onChange={e => setRequiredAdorers(e.target.value)}
-          placeholder="Contact phone number"
-        />
-        <TextField
-          autoFocus
-          margin="dense"
-          id="location"
-          label="Location"
-          type="text"
-          fullWidth
-        />
+
+        <FormControl variant="filled" className={classes.formControl}>
+          <TextField
+            id="required adorers"
+            label="Required Adorers"
+            type="number"
+            variant="filled"
+            value={requiredAdorers}
+            onChange={e => setRequiredAdorers(e.target.value)}
+            placeholder="0"
+          />
+        </FormControl>
+
+        <FormControl variant="filled" className={classes.formControl}>
+          <TextField
+            margin="dense"
+            id="location"
+            label="Location"
+            variant="filled"
+            type="text"
+            fullWidth
+          />
+        </FormControl>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="primary">
           Cancel
         </Button>
         <Button
+          type="submit"
           onClick={() => {
             handleClose();
             setTimeout(() => {

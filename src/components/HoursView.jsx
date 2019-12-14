@@ -5,6 +5,7 @@ import { Grid, CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AddButton from './AddButton';
 import HoursViewSection from './HoursViewSection';
+import { sortHoursByDay } from '../helpers/HourHelper';
 
 const HOURS_QUERY = gql`
   {
@@ -20,28 +21,7 @@ const HOURS_QUERY = gql`
   }
 `;
 
-const sortHoursByDay = hours => {
-  return hours.reduce((result, hour) => {
-    const { dayString } = hour;
-
-    // eslint-disable-next-line no-param-reassign
-    result[dayString] = result[dayString]
-      ? [...result[dayString], hour]
-      : [hour];
-
-    return result;
-  }, {});
-};
-
 const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary
-  },
   loader: {
     paddingTop: '40px',
     display: 'flex',
@@ -51,15 +31,22 @@ const useStyles = makeStyles(theme => ({
 
 const HoursView = () => {
   const classes = useStyles();
-  const { loading, error, data } = useQuery(HOURS_QUERY);
+  const { loading, error, data } = useQuery(HOURS_QUERY, {
+    pollInterval: 30 * 1000
+  });
 
-  if (loading) return <CircularProgress />;
+  if (loading)
+    return (
+      <Grid item xs={12} className={classes.loader}>
+        <CircularProgress />
+      </Grid>
+    );
   if (error) return <p>Error loading hours...</p>;
 
   const sections = sortHoursByDay(data.hours);
 
   return (
-    <div className={classes.root}>
+    <>
       <Grid container spacing={3}>
         {Object.keys(sections).map(section => (
           <HoursViewSection
@@ -71,7 +58,7 @@ const HoursView = () => {
       </Grid>
 
       <AddButton />
-    </div>
+    </>
   );
 };
 
