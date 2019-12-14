@@ -12,6 +12,7 @@ import HourGlassFullRoundedIcon from '@material-ui/icons/HourglassFullRounded';
 import SettingsRoundedIcon from '@material-ui/icons/SettingsRounded';
 import PeopleAltRoundedIcon from '@material-ui/icons/PeopleAltRounded';
 import { makeStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
 import NavigationMenuContext from '../contexts/NavigationMenuContext';
 
 const useStyles = makeStyles({
@@ -20,6 +21,10 @@ const useStyles = makeStyles({
   },
   fullList: {
     width: 'auto'
+  },
+  link: {
+    textDecoration: 'none',
+    color: 'inherit'
   }
 });
 
@@ -49,26 +54,32 @@ export default function NavigationMenu() {
         onKeyDown={toggleDrawer(false)}
       >
         <List>
-          <ListItem button key="Home">
-            <ListItemIcon>
-              <HomeRoundedIcon />
-            </ListItemIcon>
-            <ListItemText primary="Home" />
-          </ListItem>
+          <Link to="/" className={classes.link}>
+            <ListItem button key="Home">
+              <ListItemIcon>
+                <HomeRoundedIcon />
+              </ListItemIcon>
+              <ListItemText primary="Home" />
+            </ListItem>
+          </Link>
 
-          <ListItem button key="Adorers">
-            <ListItemIcon>
-              <PeopleAltRoundedIcon />
-            </ListItemIcon>
-            <ListItemText primary="Adorers" />
-          </ListItem>
+          <Link to="/volunteers" className={classes.link}>
+            <ListItem button key="Adorers">
+              <ListItemIcon>
+                <PeopleAltRoundedIcon />
+              </ListItemIcon>
+              <ListItemText primary="Adorers" />
+            </ListItem>
+          </Link>
 
-          <ListItem button key="Hours">
-            <ListItemIcon>
-              <HourGlassFullRoundedIcon />
-            </ListItemIcon>
-            <ListItemText primary="Hours" />
-          </ListItem>
+          <Link to="/hours" className={classes.link}>
+            <ListItem button key="Hours">
+              <ListItemIcon>
+                <HourGlassFullRoundedIcon />
+              </ListItemIcon>
+              <ListItemText primary="Hours" />
+            </ListItem>
+          </Link>
 
           <Divider />
 
