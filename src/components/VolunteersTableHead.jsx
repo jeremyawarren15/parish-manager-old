@@ -9,15 +9,13 @@ import {
 
 const headCells = [
   {
-    id: 'name',
+    id: 'firstName',
     numeric: false,
     disablePadding: true,
-    label: 'Dessert (100g serving)'
+    label: 'First Name'
   },
-  { id: 'calories', numeric: true, disablePadding: false, label: 'Calories' },
-  { id: 'fat', numeric: true, disablePadding: false, label: 'Fat (g)' },
-  { id: 'carbs', numeric: true, disablePadding: false, label: 'Carbs (g)' },
-  { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' }
+  { id: 'lastName', numeric: false, disablePadding: false, label: 'Last Name' },
+  { id: 'email', numeric: false, disablePadding: false, label: 'Email' }
 ];
 
 function VolunteersTableHead(props) {
