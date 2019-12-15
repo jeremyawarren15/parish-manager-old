@@ -9,6 +9,9 @@ import {
   Paper,
   Checkbox
 } from '@material-ui/core';
+import { gql } from 'apollo-boost';
+import { useQuery } from '@apollo/react-hooks';
+
 import VolunteersTableToolbar from './VolunteersTableToolbar';
 import VolunteersTableHead from './VolunteersTableHead';
 
@@ -16,7 +19,16 @@ function createData(firstName, lastName, email) {
   return { firstName, lastName, email };
 }
 
-const rows = [createData('Jeremy', 'Warren', 'jeremyawarren15@gmail.com')];
+const VOLUNTEERS_QUERY = gql`
+  {
+    users {
+      id
+      firstName
+      lastName
+      email
+    }
+  }
+`;
 
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -78,6 +90,7 @@ export default function Volunteers() {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const { loading, error, data } = useQuery(VOLUNTEERS_QUERY);
 
   const handleRequestSort = (event, property) => {
     const isDesc = orderBy === property && order === 'desc';
@@ -87,7 +100,7 @@ export default function Volunteers() {
 
   const handleSelectAllClick = event => {
     if (event.target.checked) {
-      const newSelecteds = rows.map(n => n.name);
+      const newSelecteds = data.users.map(n => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -123,10 +136,13 @@ export default function Volunteers() {
     setPage(0);
   };
 
+  if (loading) return <></>;
+  if (error) return <></>;
+
   const isSelected = name => selected.indexOf(name) !== -1;
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, data.users.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
@@ -145,10 +161,10 @@ export default function Volunteers() {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={data.users.length}
             />
             <TableBody>
-              {stableSort(rows, getSorting(order, orderBy))
+              {stableSort(data.users, getSorting(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.name);
@@ -193,9 +209,9 @@ export default function Volunteers() {
           </Table>
         </div>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[10, 25, 50]}
           component="div"
-          count={rows.length}
+          count={data.users.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onChangePage={handleChangePage}
