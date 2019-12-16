@@ -7,7 +7,8 @@ import {
   TablePagination,
   TableRow,
   Paper,
-  Checkbox
+  Checkbox,
+  Zoom
 } from '@material-ui/core';
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
@@ -86,10 +87,10 @@ const useStyles = makeStyles(theme => ({
 export default function Volunteers() {
   const classes = useStyles();
   const [order, setOrder] = useState('asc');
-  const [orderBy, setOrderBy] = React.useState('calories');
+  const [orderBy, setOrderBy] = React.useState('id');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const { loading, error, data } = useQuery(VOLUNTEERS_QUERY);
 
   const handleRequestSort = (event, property) => {
@@ -141,82 +142,76 @@ export default function Volunteers() {
 
   const isSelected = name => selected.indexOf(name) !== -1;
 
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, data.users.length - page * rowsPerPage);
-
   return (
-    <div className={classes.root}>
-      <Paper className={classes.paper}>
-        <VolunteersTableToolbar numSelected={selected.length} />
-        <div className={classes.tableWrapper}>
-          <Table
-            className={classes.table}
-            aria-labelledby="tableTitle"
-            aria-label="enhanced table"
-          >
-            <VolunteersTableHead
-              classes={classes}
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={data.users.length}
-            />
-            <TableBody>
-              {stableSort(data.users, getSorting(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.id);
-                  const labelId = `enhanced-table-checkbox-${index}`;
-
-                  return (
-                    <TableRow
-                      hover
-                      onClick={event => handleClick(event, row.id)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.id}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ 'aria-labelledby': labelId }}
-                        />
-                      </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
+    <Zoom in>
+      <div className={classes.root}>
+        <Paper className={classes.paper}>
+          <VolunteersTableToolbar numSelected={selected.length} />
+          <div className={classes.tableWrapper}>
+            <Table
+              className={classes.table}
+              aria-labelledby="tableTitle"
+              aria-label="enhanced table"
+            >
+              <VolunteersTableHead
+                classes={classes}
+                numSelected={selected.length}
+                order={order}
+                orderBy={orderBy}
+                onSelectAllClick={handleSelectAllClick}
+                onRequestSort={handleRequestSort}
+                rowCount={data.users.length}
+              />
+              <TableBody>
+                {stableSort(data.users, getSorting(order, orderBy))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) => {
+                    const isItemSelected = isSelected(row.id);
+                    const labelId = `enhanced-table-checkbox-${index}`;
+                    const delay = index * 500;
+                    return (
+                      <TableRow
+                        hover
+                        onClick={event => handleClick(event, row.id)}
+                        role="checkbox"
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        key={row.id}
+                        selected={isItemSelected}
                       >
-                        {row.firstName}
-                      </TableCell>
-                      <TableCell>{row.lastName}</TableCell>
-                      <TableCell>{row.email}</TableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 50]}
-          component="div"
-          count={data.users.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-        />
-      </Paper>
-    </div>
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            checked={isItemSelected}
+                            inputProps={{ 'aria-labelledby': labelId }}
+                          />
+                        </TableCell>
+                        <TableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding="none"
+                        >
+                          {row.firstName}
+                        </TableCell>
+                        <TableCell>{row.lastName}</TableCell>
+                        <TableCell>{row.email}</TableCell>
+                      </TableRow>
+                    );
+                  })}
+              </TableBody>
+            </Table>
+          </div>
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 50]}
+            component="div"
+            count={data.users.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+          />
+        </Paper>
+      </div>
+    </Zoom>
   );
 }
