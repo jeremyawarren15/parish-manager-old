@@ -1,11 +1,10 @@
 import React from 'react';
 import { gql } from 'apollo-boost';
-import { useQuery } from '@apollo/react-hooks';
-import { Grid, CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import AddButton from './AddButton';
-import HoursViewSection from './HoursViewSection';
-import { sortHoursByDay } from '../helpers/HourHelper';
+import { Grid, CircularProgress } from '@material-ui/core';
+import { useQuery } from '@apollo/react-hooks';
+import { sortHoursByDay } from '../../helpers/HourHelper';
+import HoursView from './HoursView';
 
 const HOURS_QUERY = gql`
   {
@@ -29,37 +28,24 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const HoursView = () => {
+const HoursViewContainer = () => {
   const classes = useStyles();
   const { loading, error, data } = useQuery(HOURS_QUERY, {
     pollInterval: 30 * 1000
   });
-
   if (loading)
     return (
       <Grid item xs={12} className={classes.loader}>
         <CircularProgress />
       </Grid>
     );
+
   if (error) return <p>Error loading hours...</p>;
 
   const sections = sortHoursByDay(data.hours);
+  console.log(sections);
 
-  return (
-    <>
-      <Grid container spacing={3}>
-        {Object.keys(sections).map(section => (
-          <HoursViewSection
-            key={section}
-            headerText={section}
-            hours={sections[section]}
-          />
-        ))}
-      </Grid>
-
-      <AddButton />
-    </>
-  );
+  return <HoursView sections={sections} />;
 };
 
-export default HoursView;
+export default HoursViewContainer;

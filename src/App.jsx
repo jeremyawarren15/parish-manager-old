@@ -8,7 +8,7 @@ import NavigationMenu from './components/NavigationMenu';
 import Header from './components/Header';
 import NavigationMenuContext from './contexts/NavigationMenuContext';
 import UserContext from './contexts/UserContext';
-import HoursView from './components/HoursView';
+import HoursViewContainer from './components/HoursView/HoursViewContainer';
 import Home from './components/Home';
 import Volunteers from './components/Volunteers';
 
@@ -38,7 +38,7 @@ const App = () => {
         <Container maxWidth="md" style={{ paddingTop: '76px' }}>
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route path="/hours" component={HoursView} />
+            <Route path="/hours" component={HoursViewContainer} />
             <Route path="/volunteers" component={Volunteers} />
           </Switch>
         </Container>

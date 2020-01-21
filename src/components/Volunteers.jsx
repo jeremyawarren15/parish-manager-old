@@ -16,10 +16,6 @@ import { useQuery } from '@apollo/react-hooks';
 import VolunteersTableToolbar from './VolunteersTableToolbar';
 import VolunteersTableHead from './VolunteersTableHead';
 
-function createData(firstName, lastName, email) {
-  return { firstName, lastName, email };
-}
-
 const VOLUNTEERS_QUERY = gql`
   {
     users {
@@ -168,7 +164,7 @@ export default function Volunteers() {
                   .map((row, index) => {
                     const isItemSelected = isSelected(row.id);
                     const labelId = `enhanced-table-checkbox-${index}`;
-                    const delay = index * 500;
+
                     return (
                       <TableRow
                         hover
