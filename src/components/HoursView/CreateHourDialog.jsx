@@ -14,7 +14,7 @@ import {
   MenuItem
 } from '@material-ui/core';
 
-import { daysOfTheWeek } from '../helpers/HourHelper';
+import { daysOfTheWeek } from '../../helpers/HourHelper';
 
 const useStyles = makeStyles(theme => ({
   formControl: {

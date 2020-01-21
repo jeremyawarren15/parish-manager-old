@@ -1,21 +1,7 @@
 import React from 'react';
 import { Typography, Grid } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1
-  },
-  loader: {
-    paddingTop: '40px',
-    display: 'flex',
-    justifyContent: 'center'
-  }
-}));
 
 const Home = () => {
-  const classes = useStyles();
-
   return (
     <>
       <Grid container spacing={3}>
