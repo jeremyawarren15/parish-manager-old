@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React from 'react';
 import {
   Table,
   TableBody,
@@ -10,34 +9,11 @@ import {
   Checkbox,
   Zoom
 } from '@material-ui/core';
-import { gql } from 'apollo-boost';
-import { useQuery } from '@apollo/react-hooks';
 
 import VolunteersTableToolbar from './VolunteersTableToolbar';
 import VolunteersTableHead from './VolunteersTableHead';
 
-const VOLUNTEERS_QUERY = gql`
-  {
-    users {
-      id
-      firstName
-      lastName
-      email
-    }
-  }
-`;
-
-function desc(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function stableSort(array, cmp) {
+const stableSort = (array, cmp) => {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = cmp(a[0], b[0]);
@@ -45,98 +21,40 @@ function stableSort(array, cmp) {
     return a[1] - b[1];
   });
   return stabilizedThis.map(el => el[0]);
-}
+};
 
-function getSorting(order, orderBy) {
+const desc = (a, b, orderBy) => {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+};
+
+const getSorting = (order, orderBy) => {
   return order === 'desc'
     ? (a, b) => desc(a, b, orderBy)
     : (a, b) => -desc(a, b, orderBy);
-}
+};
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    width: '100%'
-  },
-  paper: {
-    width: '100%',
-    marginBottom: theme.spacing(2)
-  },
-  table: {
-    minWidth: 750
-  },
-  tableWrapper: {
-    overflowX: 'auto'
-  },
-  visuallyHidden: {
-    border: 0,
-    clip: 'rect(0 0 0 0)',
-    height: 1,
-    margin: -1,
-    overflow: 'hidden',
-    padding: 0,
-    position: 'absolute',
-    top: 20,
-    width: 1
-  }
-}));
-
-export default function Volunteers() {
-  const classes = useStyles();
-  const [order, setOrder] = useState('asc');
-  const [orderBy, setOrderBy] = React.useState('id');
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const { loading, error, data } = useQuery(VOLUNTEERS_QUERY);
-
-  const handleRequestSort = (event, property) => {
-    const isDesc = orderBy === property && order === 'desc';
-    setOrder(isDesc ? 'asc' : 'desc');
-    setOrderBy(property);
-  };
-
-  const handleSelectAllClick = event => {
-    if (event.target.checked) {
-      const newSelecteds = data.users.map(n => n.id);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event, id) => {
-    const selectedIndex = selected.indexOf(id);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelected(newSelected);
-  };
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = event => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  if (loading) return <></>;
-  if (error) return <></>;
-
-  const isSelected = name => selected.indexOf(name) !== -1;
+const Volunteers = props => {
+  const {
+    classes,
+    selected,
+    order,
+    orderBy,
+    handleSelectAllClick,
+    handleRequestSort,
+    data,
+    page,
+    rowsPerPage,
+    isSelected,
+    handleClick,
+    handleChangePage,
+    handleChangeRowsPerPage
+  } = props;
 
   return (
     <Zoom in>
@@ -210,4 +128,6 @@ export default function Volunteers() {
       </div>
     </Zoom>
   );
-}
+};
+
+export default Volunteers;

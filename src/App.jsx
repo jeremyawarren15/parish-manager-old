@@ -10,7 +10,7 @@ import NavigationMenuContext from './contexts/NavigationMenuContext';
 import UserContext from './contexts/UserContext';
 import HoursViewContainer from './components/HoursView/HoursViewContainer';
 import Home from './components/Home';
-import Volunteers from './components/Volunteers';
+import VolunteersContainer from './components/VolunteersView/VolunteersContainer';
 
 const client = new ApolloClient({
   uri:
@@ -39,7 +39,7 @@ const App = () => {
           <Switch>
             <Route exact path="/" component={Home} />
             <Route path="/hours" component={HoursViewContainer} />
-            <Route path="/volunteers" component={Volunteers} />
+            <Route path="/volunteers" component={VolunteersContainer} />
           </Switch>
         </Container>
       </Router>
