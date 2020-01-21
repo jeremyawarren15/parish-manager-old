@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Table,
   TableBody,
@@ -8,12 +9,11 @@ import {
   Checkbox,
   Zoom
 } from '@material-ui/core';
-import React from 'react';
 
 import VolunteersTableToolbar from './VolunteersTableToolbar';
 import VolunteersTableHead from './VolunteersTableHead';
 
-function stableSort(array, cmp) {
+const stableSort = (array, cmp) => {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = cmp(a[0], b[0]);
@@ -21,13 +21,7 @@ function stableSort(array, cmp) {
     return a[1] - b[1];
   });
   return stabilizedThis.map(el => el[0]);
-}
-
-function getSorting(order, orderBy) {
-  return order === 'desc'
-    ? (a, b) => desc(a, b, orderBy)
-    : (a, b) => -desc(a, b, orderBy);
-}
+};
 
 const desc = (a, b, orderBy) => {
   if (b[orderBy] < a[orderBy]) {
@@ -37,6 +31,12 @@ const desc = (a, b, orderBy) => {
     return 1;
   }
   return 0;
+};
+
+const getSorting = (order, orderBy) => {
+  return order === 'desc'
+    ? (a, b) => desc(a, b, orderBy)
+    : (a, b) => -desc(a, b, orderBy);
 };
 
 const Volunteers = props => {
