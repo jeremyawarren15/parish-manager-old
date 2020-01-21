@@ -43,7 +43,6 @@ const HoursViewContainer = () => {
   if (error) return <p>Error loading hours...</p>;
 
   const sections = sortHoursByDay(data.hours);
-  console.log(sections);
 
   return <HoursView sections={sections} />;
 };
