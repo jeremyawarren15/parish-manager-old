@@ -4,17 +4,6 @@ import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
 import Volunteers from './Volunteers';
 
-const VOLUNTEERS_QUERY = gql`
-  {
-    users {
-      id
-      firstName
-      lastName
-      email
-    }
-  }
-`;
-
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%'
@@ -43,6 +32,20 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const VolunteersContainer = () => {
+  const [cursor, setCursor] = useState(0);
+  const VOLUNTEERS_QUERY = gql`
+    {
+      users(cursor: ${cursor}) {
+        id
+        firstName
+        lastName
+        email
+      }
+      userAggregates {
+        totalCount
+      }
+    }
+  `;
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = React.useState('id');
   const [selected, setSelected] = React.useState([]);
@@ -50,6 +53,9 @@ const VolunteersContainer = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const classes = useStyles();
   const { loading, error, data } = useQuery(VOLUNTEERS_QUERY);
+
+  if (loading) return <></>;
+  if (error) return <></>;
 
   const handleRequestSort = (event, property) => {
     const isDesc = orderBy === property && order === 'desc';
@@ -87,6 +93,7 @@ const VolunteersContainer = () => {
   };
 
   const handleChangePage = (event, newPage) => {
+    setCursor(data.users[rowsPerPage - 1]?.id || 0);
     setPage(newPage);
   };
 
@@ -94,9 +101,6 @@ const VolunteersContainer = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
-  if (loading) return <></>;
-  if (error) return <></>;
 
   const isSelected = name => selected.indexOf(name) !== -1;
 
@@ -109,6 +113,7 @@ const VolunteersContainer = () => {
       order={order}
       orderBy={orderBy}
       data={data}
+      totalUsersCount={data.userAggregates.totalCount}
       page={page}
       rowsPerPage={rowsPerPage}
       isSelected={isSelected}
