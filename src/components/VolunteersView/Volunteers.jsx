@@ -48,6 +48,7 @@ const Volunteers = props => {
     handleSelectAllClick,
     handleRequestSort,
     data,
+    totalUsersCount,
     page,
     rowsPerPage,
     isSelected,
@@ -118,7 +119,7 @@ const Volunteers = props => {
           <TablePagination
             rowsPerPageOptions={[10, 25, 50]}
             component="div"
-            count={data.users.length}
+            count={totalUsersCount}
             rowsPerPage={rowsPerPage}
             page={page}
             onChangePage={handleChangePage}
