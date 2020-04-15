@@ -12,6 +12,9 @@ const VOLUNTEERS_QUERY = gql`
       lastName
       email
     }
+    userAggregates {
+      totalCount
+    }
   }
 `;
 
@@ -115,6 +118,7 @@ const VolunteersContainer = () => {
       handleClick={handleClick}
       handleChangePage={handleChangePage}
       handleChangeRowsPerPage={handleChangeRowsPerPage}
+      totalUsers={data.userAggregates.totalCount}
     />
   );
 };
