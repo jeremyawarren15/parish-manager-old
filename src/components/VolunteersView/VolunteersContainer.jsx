@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
+import { Grid, CircularProgress } from '@material-ui/core';
 import Volunteers from './Volunteers';
 
 const VOLUNTEERS_QUERY = gql`
@@ -42,6 +43,11 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute',
     top: 20,
     width: 1
+  },
+  loader: {
+    paddingTop: '40px',
+    display: 'flex',
+    justifyContent: 'center'
   }
 }));
 
@@ -120,7 +126,13 @@ const VolunteersContainer = () => {
     setPage(0);
   };
 
-  if (loading) return <></>;
+  if (loading)
+    return (
+      <Grid item xs={12} className={classes.loader}>
+        <CircularProgress />
+      </Grid>
+    );
+
   if (error) return <></>;
 
   const isSelected = name => selected.indexOf(name) !== -1;
