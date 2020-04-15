@@ -5,8 +5,8 @@ import { useQuery } from '@apollo/react-hooks';
 import Volunteers from './Volunteers';
 
 const VOLUNTEERS_QUERY = gql`
-  {
-    users {
+  query Get($cursor: Int) {
+    users(cursor: $cursor) {
       id
       firstName
       lastName
@@ -50,9 +50,12 @@ const VolunteersContainer = () => {
   const [orderBy, setOrderBy] = React.useState('id');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
+  const [cursor, setCursor] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const classes = useStyles();
-  const { loading, error, data } = useQuery(VOLUNTEERS_QUERY);
+  const { loading, error, data, fetchMore } = useQuery(VOLUNTEERS_QUERY, {
+    variables: { cursor }
+  });
 
   const handleRequestSort = (event, property) => {
     const isDesc = orderBy === property && order === 'desc';
@@ -90,6 +93,28 @@ const VolunteersContainer = () => {
   };
 
   const handleChangePage = (event, newPage) => {
+    fetchMore({
+      query: VOLUNTEERS_QUERY,
+      variables: { cursor: (page + 1) * rowsPerPage },
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        let appendUsers = [];
+        const previousUserIds = previousResult.users.map(u => u.id);
+
+        // probably a better way to do this
+        // adds new user only if the user id
+        // exists in the previous result
+        fetchMoreResult.users.forEach(u => {
+          if (!previousUserIds.includes(u.id)) {
+            appendUsers = [...appendUsers, u];
+          }
+        });
+
+        return {
+          users: [...previousResult.users, ...appendUsers]
+        };
+      }
+    });
+
     setPage(newPage);
   };
 
