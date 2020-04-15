@@ -50,12 +50,9 @@ const VolunteersContainer = () => {
   const [orderBy, setOrderBy] = React.useState('id');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [cursor, setCursor] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const classes = useStyles();
-  const { loading, error, data, fetchMore } = useQuery(VOLUNTEERS_QUERY, {
-    variables: { cursor }
-  });
+  const { loading, error, data, fetchMore } = useQuery(VOLUNTEERS_QUERY);
 
   const handleRequestSort = (event, property) => {
     const isDesc = orderBy === property && order === 'desc';
