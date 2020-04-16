@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
 import { Grid, CircularProgress } from '@material-ui/core';
+import { Alert, AlertTitle } from '@material-ui/lab';
 import Volunteers from './Volunteers';
 
 const VOLUNTEERS_QUERY = gql`
@@ -133,7 +134,13 @@ const VolunteersContainer = () => {
       </Grid>
     );
 
-  if (error) return <></>;
+  if (error)
+    return (
+      <Alert severity="error">
+        <AlertTitle>Error</AlertTitle>
+        An error occured while retrieving users. Please try again.
+      </Alert>
+    );
 
   const isSelected = name => selected.indexOf(name) !== -1;
 

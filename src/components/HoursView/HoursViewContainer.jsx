@@ -2,6 +2,7 @@ import React from 'react';
 import { gql } from 'apollo-boost';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, CircularProgress } from '@material-ui/core';
+import { Alert, AlertTitle } from '@material-ui/lab';
 import { useQuery } from '@apollo/react-hooks';
 import { sortHoursByDay } from '../../helpers/HourHelper';
 import HoursView from './HoursView';
@@ -40,7 +41,13 @@ const HoursViewContainer = () => {
       </Grid>
     );
 
-  if (error) return <p>Error loading hours...</p>;
+  if (error)
+    return (
+      <Alert severity="error">
+        <AlertTitle>Error</AlertTitle>
+        An error occured while retrieving hours. Please try again.
+      </Alert>
+    );
 
   const sections = sortHoursByDay(data.hours);
 
