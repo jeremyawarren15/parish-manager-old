@@ -49,6 +49,10 @@ const HoursViewContainer = () => {
       </Alert>
     );
 
+  // need to update the formatting here
+  // this just prevents it from barfing
+  if (!data.hours) return <h1>No hours to display</h1>;
+
   const sections = sortHoursByDay(data.hours);
 
   return <HoursView sections={sections} />;

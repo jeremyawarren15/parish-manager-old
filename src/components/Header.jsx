@@ -6,6 +6,7 @@ import {
   Typography,
   Button
 } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 import MenuIcon from '@material-ui/icons/Menu';
 import { makeStyles } from '@material-ui/core/styles';
 import NavigationMenuContext from '../contexts/NavigationMenuContext';
@@ -27,7 +28,7 @@ const useStyles = makeStyles(theme => ({
 const Header = () => {
   const classes = useStyles();
   const { setNavigationMenuOpen } = useContext(NavigationMenuContext);
-  const { user, setUser } = useContext(UserContext);
+  const { token, logout } = useContext(UserContext);
 
   return (
     <div className={classes.root}>
@@ -45,15 +46,21 @@ const Header = () => {
           <Typography variant="h6" className={classes.title}>
             Parish Manager
           </Typography>
-          {user ? (
-            <Button color="inherit" onClick={() => setUser(null)}>
-              Log Out,&nbsp;
-              {user}
+          {token ? (
+            <Button color="inherit" onClick={() => logout()}>
+              Log Out
             </Button>
           ) : (
-            <Button onClick={() => setUser('Jeremy')} color="inherit">
-              Login
-            </Button>
+            // There has to be a better way to do this
+            // but I don't have time to look. It is working
+            // right now. But it won't log out on the login
+            // page for some reason.
+            <Link
+              to="/login"
+              style={{ textDecoration: 'none', color: 'inherit' }}
+            >
+              <Button color="inherit">Log In</Button>
+            </Link>
           )}
         </Toolbar>
       </AppBar>
