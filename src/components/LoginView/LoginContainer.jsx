@@ -1,7 +1,6 @@
-import React, { useState, useContext, useMemo } from 'react';
+import React, { useState, useContext } from 'react';
 import { gql } from 'apollo-boost';
 import { useLazyQuery } from '@apollo/react-hooks';
-import { makeStyles } from '@material-ui/core/styles';
 import UserContext from '../../contexts/UserContext';
 import { useEffect } from 'react';
 import LoginView from './LoginView';
@@ -15,16 +14,6 @@ const LOGIN_QUERY = gql`
     }
   }
 `;
-
-const useStyles = makeStyles(theme => ({
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2)
-  }
-}));
 
 const LoginContainer = () => {
   const [email, setEmail] = useState('');
@@ -44,7 +33,7 @@ const LoginContainer = () => {
     if (data) {
       login(data.login.token);
     }
-  }, [data, token]);
+  }, [login, data, token]);
 
   return (
     <LoginView
